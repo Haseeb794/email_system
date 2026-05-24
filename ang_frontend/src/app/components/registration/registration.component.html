@@ -1,0 +1,206 @@
+<!-- ── Root wrapper ── -->
+<div class="relative z-10 min-h-screen flex flex-col">
+
+  <!-- ══════════════════════ HEADER ══════════════════════ -->
+  <header class="px-12 py-8 flex items-center gap-4 border-b border-app-border animate-slide-down">
+
+    <!-- Logo mark -->
+    <div class="w-[38px] h-[38px] rounded-full border-2 border-app-gold
+                flex items-center justify-center text-base text-app-gold flex-shrink-0">
+      ✉
+    </div>
+
+    <!-- Logo text -->
+    <div>
+      <div class="text-[15px] font-bold tracking-[3px] uppercase text-app-ink">EmailSystem</div>
+      <div class="text-[11px] text-app-muted tracking-[2px] mt-px font-mono">Registration Portal</div>
+    </div>
+
+    <!-- API status indicator -->
+    <div class="ml-auto flex items-center gap-2">
+      <div class="w-[7px] h-[7px] rounded-full animate-pulse2 transition-colors duration-500" [ngClass]="!apiChecked
+          ? 'bg-app-muted'
+          : apiOnline
+            ? 'bg-app-success shadow-[0_0_8px_#52c98c]'
+            : 'bg-app-error shadow-[0_0_8px_#f97066]'">
+      </div>
+      <span class="font-mono text-[11px] text-app-muted">
+        {{ !apiChecked ? 'connecting…' : (apiOnline ? 'API online' : 'API offline') }}
+      </span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════ MAIN GRID ══════════════════════ -->
+  <main class="flex-1 grid grid-cols-1 md:grid-cols-2 max-w-[1200px] mx-auto w-full px-12 py-16">
+
+    <!-- ══════════ LEFT — Registration form ══════════ -->
+    <div class="pr-0 md:pr-16 animate-fade-up-d1">
+
+      <!-- Section tag -->
+      <div
+        class="section-tag font-mono text-[11px] text-app-gold tracking-[3px] uppercase mb-5 flex items-center gap-2">
+        Registration
+      </div>
+
+      <!-- Heading -->
+      <h1 class="font-extrabold leading-[1.15] text-app-ink mb-3">
+        Get your <span class="text-app-gold">confirmation</span> email
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-[14px] text-app-muted leading-[1.7] mb-10 font-mono font-light">
+        Enter your name and email below. We'll dispatch<br />
+        a confirmation straight to your inbox.
+      </p>
+
+      <!-- ── Form card ── -->
+      <form [formGroup]="form" (ngSubmit)="handleSubmit()"
+        class="form-card bg-app-surface border border-app-border rounded-[10px] p-8 relative overflow-hidden">
+
+        <!-- Name field -->
+        <div class="mb-5">
+          <label for="nameInput"
+            class="block text-[11px] font-semibold tracking-[2px] uppercase text-app-muted mb-2 font-mono">
+            Full Name
+          </label>
+          <input id="nameInput" type="text" formControlName="name" placeholder="e.g. Haseeb Tahir" autocomplete="off"
+            class="w-full bg-app-bg border rounded-[6px] px-4 py-3
+                   text-[14px] text-app-ink font-mono outline-none
+                   placeholder:text-app-muted focus:border-app-gold
+                   transition-[border-color,box-shadow] duration-200"
+            [ngClass]="nameError ? 'border-app-error' : 'border-app-border'" />
+          <div *ngIf="nameError" class="text-[11px] text-app-error mt-1.5 font-mono">
+            {{ nameError }}
+          </div>
+        </div>
+
+        <!-- Email field -->
+        <div class="mb-5">
+          <label for="emailInput"
+            class="block text-[11px] font-semibold tracking-[2px] uppercase text-app-muted mb-2 font-mono">
+            Email Address
+          </label>
+          <input id="emailInput" type="email" formControlName="email" placeholder="you@example.com" autocomplete="off"
+            class="w-full bg-app-bg border rounded-[6px] px-4 py-3
+                   text-[14px] text-app-ink font-mono outline-none
+                   placeholder:text-app-muted focus:border-app-gold
+                   transition-[border-color,box-shadow] duration-200"
+            [ngClass]="emailErrorFull ? 'border-app-error' : 'border-app-border'" />
+          <div *ngIf="emailErrorFull" class="text-[11px] text-app-error mt-1.5 font-mono">
+            {{ emailErrorFull }}
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" [disabled]="isLoading" class="btn-submit w-full py-3.5 mt-2 bg-app-gold text-app-bg rounded-[6px]
+                 font-syne text-[14px] font-bold tracking-[2px] uppercase cursor-pointer
+                 border-none relative overflow-hidden
+                 hover:opacity-90 hover:-translate-y-px
+                 active:translate-y-0
+                 disabled:opacity-50 disabled:cursor-not-allowed
+                 transition-[opacity,transform] duration-200" [class.loading]="isLoading">
+          {{ isLoading ? 'Sending…' : 'Send Confirmation →' }}
+        </button>
+
+        <!-- Toast notification -->
+        <div *ngIf="toast" class="mt-4 px-4 py-3 rounded-[6px] font-mono text-[13px]
+                 flex items-start gap-2.5 border animate-fade-up-toast" [ngClass]="toast.type === 'success'
+            ? 'bg-[rgba(82,201,140,0.08)] border-[rgba(82,201,140,0.3)] text-app-success'
+            : 'bg-[rgba(249,112,102,0.08)] border-[rgba(249,112,102,0.3)] text-app-error'">
+          <span>{{ toast.type === 'success' ? '✓' : '✕' }}</span>
+          <span>{{ toast.message }}</span>
+        </div>
+
+      </form>
+
+      <!-- Mailpit info box -->
+      <div class="mt-5 p-4 bg-[rgba(232,201,126,0.04)] border border-[rgba(232,201,126,0.15)]
+                  rounded-[6px] font-mono text-[12px] text-app-muted leading-[1.8]">
+        <strong class="text-app-gold">📬 Temp Inbox</strong><br />
+        Emails are captured by <strong>Mailpit</strong> (no real delivery).<br />
+        View your inbox at:
+        <a href="http://localhost:8025" target="_blank" rel="noopener"
+          class="text-app-gold no-underline hover:underline">
+          http://localhost:8025
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ══════════ RIGHT — Subscribers list ══════════ -->
+    <div class="pl-0 pt-12 border-t border-app-border
+                md:pl-12 md:pt-0 md:border-t-0 md:border-l md:border-app-border
+                animate-fade-up-d2">
+
+      <!-- Panel header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="text-[13px] font-bold tracking-[2px] uppercase text-app-ink">
+          Registered Subscribers
+        </div>
+        <div class="bg-[rgba(232,201,126,0.12)] border border-[rgba(232,201,126,0.2)]
+                    rounded-full px-3 py-0.5 font-mono text-[12px] text-app-gold">
+          {{ subscribers.length }}
+        </div>
+      </div>
+
+      <!-- API offline -->
+      <div *ngIf="apiChecked && !apiOnline"
+        class="text-center py-12 text-app-muted font-mono text-[13px] leading-loose">
+        <div class="text-3xl mb-3 opacity-40">⚠️</div>
+        Cannot reach API.<br />Start the FastAPI server first.
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="apiOnline && subscribers.length === 0"
+        class="text-center py-12 text-app-muted font-mono text-[13px] leading-loose">
+        <div class="text-3xl mb-3 opacity-40">📭</div>
+        No subscribers yet.<br />Register above to get started.
+      </div>
+
+      <!-- Connecting -->
+      <div *ngIf="!apiChecked" class="text-center py-12 text-app-muted font-mono text-[13px] leading-loose">
+        <div class="text-3xl mb-3 opacity-40">📭</div>
+        Loading subscribers…
+      </div>
+
+      <!-- Subscriber cards -->
+      <div *ngIf="apiOnline && subscribers.length > 0" class="flex flex-col gap-2">
+        <div *ngFor="let sub of subscribers; let i = index; trackBy: trackBySubscriber" class="bg-app-surface border border-app-border rounded-[6px] px-4 py-3.5
+                 flex items-center gap-3
+                 hover:border-[rgba(232,201,126,0.25)]
+                 transition-[border-color] duration-200 animate-fade-up-fast" [style.animation-delay]="i * 0.05 + 's'">
+
+          <!-- Avatar -->
+          <div class="w-[34px] h-[34px] rounded-full flex-shrink-0
+                      bg-[rgba(232,201,126,0.12)] border border-[rgba(232,201,126,0.2)]
+                      flex items-center justify-center text-[13px] font-bold text-app-gold">
+            {{ getInitial(sub.name) }}
+          </div>
+
+          <!-- Name + email -->
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-semibold truncate text-app-ink">{{ sub.name }}</div>
+            <div class="font-mono text-[11px] text-app-muted truncate">{{ sub.email }}</div>
+          </div>
+
+          <!-- Confirmed badge -->
+          <span class="font-mono text-[10px] tracking-[1px] px-2 py-0.5 rounded-[3px] flex-shrink-0 border" [ngClass]="sub.confirmed
+              ? 'bg-[rgba(82,201,140,0.1)] text-app-success border-[rgba(82,201,140,0.2)]'
+              : 'bg-[rgba(249,112,102,0.1)] text-app-error border-[rgba(249,112,102,0.2)]'">
+            {{ sub.confirmed ? '✓ sent' : '✕ fail' }}
+          </span>
+
+          <!-- Delete button -->
+          <button (click)="deleteSubscriber(sub.id)" title="Remove" class="bg-transparent border border-transparent rounded-[6px]
+                   text-app-muted cursor-pointer px-2 py-1 text-[14px] flex-shrink-0
+                   hover:border-[rgba(249,112,102,0.4)] hover:text-app-error
+                   transition-all duration-200">
+            ✕
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

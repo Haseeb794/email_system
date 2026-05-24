@@ -1,0 +1,56 @@
+/*
+  Only pseudo-element and clamp() styles that Tailwind cannot generate.
+  Keyframes are defined in styles.css inside @theme — do NOT redeclare them here.
+*/
+
+/* ── Grid noise overlay ── */
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(232, 201, 126, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 201, 126, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── Gold gradient top border on the form card ── */
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e8c97e, transparent);
+}
+
+/* ── "//" prefix on the section tag ── */
+.section-tag::before {
+  content: '//';
+  opacity: 0.5;
+}
+
+/* ── Shimmer overlay on loading button ── */
+.btn-submit.loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 80%
+  );
+  animation: shimmer 1s infinite;
+}
+
+/* ── Fluid heading — clamp() has no Tailwind equivalent ── */
+h1 {
+  font-size: clamp(28px, 3vw, 42px);
+}
+
+/* ── Focus ring ── */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(232, 201, 126, 0.12);
+}
