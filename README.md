@@ -28,7 +28,7 @@ A full-stack email subscription and confirmation system built with **Angular** (
 ### Prerequisites
 - **Node.js** 18+ and npm
 - **Python** 3.9+
-- **MySQL** (optional, for production)
+- **MySQL**
 - **Mailpit** (for email testing)
 
 ### Installation
