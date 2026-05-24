@@ -86,9 +86,9 @@ private apiUrl = 'http://localhost:8000/api';
 ### Using Mailpit (Recommended for Testing)
 
 1. **Start Mailpit** (email testing):
-   ```bash
-   docker run -p 1025:1025 -p 8025:8025 mailpit/mailpit
-   ```
+   -download mailpit from official mailpit repo: https://github.com/axllent/mailpit
+   - open the terminal where you downloaded the mailpit
+   - start mailpit server by executing the mailpit.exe file
    - SMTP: `localhost:1025`
    - Web UI: http://localhost:8025
 
