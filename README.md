@@ -62,8 +62,8 @@ Create a `.env` file in the `backend/` folder:
 
 ```env
 # Database
-DATABASE_URL="sqlite:///./emailsystem.db"
-# For MySQL: DATABASE_URL="mysql+pymysql://user:password@localhost:3306/emailsystem"
+
+DATABASE_URL="mysql+pymysql://user:password@localhost:3306/emailsystem"
 
 # SMTP (Mailpit)
 SMTP_HOST="localhost"
